@@ -11,13 +11,14 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sonata\PageBundle\Entity;
+namespace Sonata\PageBundle\Document;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Sonata\BlockBundle\Model\BlockManagerInterface;
 use Sonata\PageBundle\Model\BlockInteractorInterface;
 use Sonata\PageBundle\Model\PageInterface;
+
 
 /**
  * This class interacts with blocks.

@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sonata\PageBundle\Entity;
+namespace Sonata\PageBundle\Document;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Sonata\PageBundle\Model\Page;
