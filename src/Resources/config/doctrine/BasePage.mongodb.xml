@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping                     http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+    <mapped-superclass name="Sonata\PageBundle\Document\BasePage">
+        <field name="routeName" type="string" field-name="routeName"/>
+        <field name="pageAlias" type="string" field-name="pageAlias" nullable="true" />
+        <field name="type" type="string" field-name="type" nullable="true"/>
+        <field name="position" type="integer" field-name="position"/>
+        <field name="enabled" type="boolean" field-name="enabled"/>
+        <field name="decorate" type="boolean" field-name="decorate"/>
+        <field name="edited" type="boolean" field-name="edited"/>
+        <field name="name" type="string" field-name="name" />
+        <field name="slug" type="text" field-name="slug" nullable="true"/>
+        <field name="url" type="text" field-name="url" nullable="true"/>
+        <field name="customUrl" type="text" field-name="customUrl" nullable="true"/>
+        <field name="requestMethod" type="string" field-name="requestMethod" nullable="true"/>
+        <field name="title" type="string" field-name="title" nullable="true" />
+        <field name="metaKeyword" type="string" field-name="metaKeyword" nullable="true" />
+        <field name="metaDescription" type="string" field-name="metaDescription" nullable="true"/>
+        <field name="javascript" type="text" field-name="javascript" nullable="true"/>
+        <field name="stylesheet" type="text" field-name="stylesheet" nullable="true"/>
+        <field name="rawHeaders" type="text" field-name="rawHeaders" nullable="true"/>
+        <field name="templateCode" type="string" field-name="template" nullable="false"/>
+        <field name="createdAt" type="date" field-name="createdAt"/>
+        <field name="updatedAt" type="date" field-name="updatedAt"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="prePersist"/>
+            <lifecycle-callback type="preUpdate" method="preUpdate"/>
+        </lifecycle-callbacks>
+    </mapped-superclass>
+</doctrine-mongo-mapping>

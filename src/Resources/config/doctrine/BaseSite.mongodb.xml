@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping                     http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+    <mapped-superclass name="Sonata\PageBundle\Document\BaseSite">
+        <field name="enabled" type="boolean" field-name="enabled"/>
+        <field name="name" type="string" field-name="name"/>
+        <field name="relativePath" type="string" field-name="relativePath" nullable="true"/>
+        <field name="host" type="string" field-name="host"/>
+        <field name="enabledFrom" type="date" field-name="enabledFrom" nullable="true"/>
+        <field name="enabledTo" type="date" field-name="enabledTo" nullable="true"/>
+        <field name="isDefault" type="boolean" field-name="isDefault"/>
+        <field name="createdAt" type="date" field-name="createdAt"/>
+        <field name="updatedAt" type="date" field-name="updatedAt"/>
+        <field name="locale" type="string" field-name="locale" nullable="true"/>
+        <field name="title" type="string" field-name="title" nullable="true" />
+        <field name="metaKeywords" type="string" field-name="metaKeywords" nullable="true"/>
+        <field name="metaDescription" type="string" field-name="metaDescription" nullable="true"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="prePersist"/>
+            <lifecycle-callback type="preUpdate" method="preUpdate"/>
+        </lifecycle-callbacks>
+    </mapped-superclass>
+</doctrine-mongo-mapping>
