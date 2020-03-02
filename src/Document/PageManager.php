@@ -193,9 +193,16 @@ class PageManager extends BaseDocumentManager implements PageManagerInterface
 
     public function loadPages(SiteInterface $site)
     {
-        $pages = $this->getEntityManager()
-            ->createQuery(sprintf('SELECT p FROM %s p INDEX BY p.id WHERE p.site = %d ORDER BY p.position ASC', $this->class, $site->getId()))
-            ->execute();
+        $pages = $this->getDocumentManager()
+            ->createQueryBuilder($this->class)
+            ->field('site.$id')->equals($site->getId())
+            ->sort('position', 'ASC')
+            ->getQuery()
+            ->getSingleResult();
+
+        if ($pages == null){
+            $pages = [];
+        }
 
         foreach ($pages as $page) {
             $parent = $page->getParent();
