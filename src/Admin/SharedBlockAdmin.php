@@ -46,11 +46,8 @@ class SharedBlockAdmin extends BaseBlockAdmin
     public function createQuery($context = 'list')
     {
         $query = parent::createQuery($context);
-
-        // Filter on blocks without page and parents
-        $rootAlias = current($query->getRootAliases());
-        $query->andWhere($query->expr()->isNull($rootAlias.'.page'));
-        $query->andWhere($query->expr()->isNull($rootAlias.'.parent'));
+        $query->field('page')->equals(null)
+            ->field('parent')->equals(null);
 
         return $query;
     }
