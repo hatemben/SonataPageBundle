@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sonata\PageBundle\Block;
 
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\ModelListType;
 use Sonata\BlockBundle\Block\BlockContextInterface;
@@ -163,7 +163,7 @@ class SharedBlockBlockService extends AbstractAdminBlockService
         $fieldDescription->setOption('edit', 'list');
         $fieldDescription->setAssociationMapping([
                 'fieldName' => 'block',
-                'type' => ClassMetadataInfo::MANY_TO_ONE,
+                'type' => ClassMetadata::REFERENCE_ONE,
             ]);
 
         return $formMapper->create('blockId', ModelListType::class, [
