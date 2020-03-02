@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sonata\PageBundle\Document;
 
 use Doctrine\Persistence\ManagerRegistry;
+use MongoDB\BSON\ObjectId;
 use Sonata\DatagridBundle\Pager\Doctrine\Pager;
 use Sonata\DatagridBundle\ProxyQuery\Doctrine\ProxyQuery;
 use Sonata\Doctrine\Document\BaseDocumentManager;
@@ -194,11 +195,8 @@ class PageManager extends BaseDocumentManager implements PageManagerInterface
     public function loadPages(SiteInterface $site)
     {
         $pages = $this->getDocumentManager()
-            ->createQueryBuilder($this->class)
-            ->field('site.$id')->equals($site->getId())
-            ->sort('position', 'ASC')
-            ->getQuery()
-            ->getSingleResult();
+            ->getRepository($this->class)
+            ->findBy(['site.$id'=>$site->getId()]);
 
         if ($pages == null){
             $pages = [];
@@ -224,15 +222,17 @@ class PageManager extends BaseDocumentManager implements PageManagerInterface
      */
     public function getHybridPages(SiteInterface $site)
     {
-        return $this->getEntityManager()->createQueryBuilder()
-            ->select('p')
-            ->from($this->class, 'p')
-            ->where('p.routeName <> :routeName and p.site = :site')
-            ->setParameters([
-                'routeName' => PageInterface::PAGE_ROUTE_CMS_NAME,
-                'site' => $site->getId(),
-            ])
+
+        $pages =  $this->getDocumentManager()
+            ->createQueryBuilder($this->class)
+            ->field('routeName')->notEqual(PageInterface::PAGE_ROUTE_CMS_NAME)
+            ->field('site.$id')->equals($site->getId())
             ->getQuery()
-            ->execute();
+            ->getSingleResult();
+
+        if ($pages == null) {
+            $pages = [];
+        }
+        return $pages;
     }
 }
