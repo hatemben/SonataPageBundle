@@ -8,7 +8,7 @@
         <field name="enabled" type="boolean" field-name="enabled"/>
         <field name="decorate" type="boolean" field-name="decorate"/>
         <field name="name" type="string" field-name="name"/>
-        <field name="url" type="text" field-name="url" nullable="true"/>
+        <field name="url" type="string" field-name="url" nullable="true"/>
         <field name="parentId" type="integer" field-name="parentId" nullable="true"/>
         <field name="targetId" type="integer" field-name="targetId" nullable="true"/>
         <field name="content" type="json" field-name="content" nullable="true"/>

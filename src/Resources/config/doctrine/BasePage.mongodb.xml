@@ -12,16 +12,16 @@
         <field name="decorate" type="boolean" field-name="decorate"/>
         <field name="edited" type="boolean" field-name="edited"/>
         <field name="name" type="string" field-name="name" />
-        <field name="slug" type="text" field-name="slug" nullable="true"/>
-        <field name="url" type="text" field-name="url" nullable="true"/>
-        <field name="customUrl" type="text" field-name="customUrl" nullable="true"/>
+        <field name="slug" type="string" field-name="slug" nullable="true"/>
+        <field name="url" type="string" field-name="url" nullable="true"/>
+        <field name="customUrl" type="string" field-name="customUrl" nullable="true"/>
         <field name="requestMethod" type="string" field-name="requestMethod" nullable="true"/>
         <field name="title" type="string" field-name="title" nullable="true" />
         <field name="metaKeyword" type="string" field-name="metaKeyword" nullable="true" />
         <field name="metaDescription" type="string" field-name="metaDescription" nullable="true"/>
-        <field name="javascript" type="text" field-name="javascript" nullable="true"/>
-        <field name="stylesheet" type="text" field-name="stylesheet" nullable="true"/>
-        <field name="rawHeaders" type="text" field-name="rawHeaders" nullable="true"/>
+        <field name="javascript" type="string" field-name="javascript" nullable="true"/>
+        <field name="stylesheet" type="string" field-name="stylesheet" nullable="true"/>
+        <field name="rawHeaders" type="string" field-name="rawHeaders" nullable="true"/>
         <field name="templateCode" type="string" field-name="templateCode" nullable="false"/>
         <field name="createdAt" type="date" field-name="createdAt"/>
         <field name="updatedAt" type="date" field-name="updatedAt"/>
