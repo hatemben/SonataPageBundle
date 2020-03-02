@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping                     http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
+                         http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
     <mapped-superclass name="Sonata\PageBundle\Document\BasePage">
         <field name="routeName" type="string" field-name="routeName"/>
         <field name="pageAlias" type="string" field-name="pageAlias" nullable="true" />
@@ -19,7 +22,7 @@
         <field name="javascript" type="text" field-name="javascript" nullable="true"/>
         <field name="stylesheet" type="text" field-name="stylesheet" nullable="true"/>
         <field name="rawHeaders" type="text" field-name="rawHeaders" nullable="true"/>
-        <field name="templateCode" type="string" field-name="template" nullable="false"/>
+        <field name="templateCode" type="string" field-name="templateCode" nullable="false"/>
         <field name="createdAt" type="date" field-name="createdAt"/>
         <field name="updatedAt" type="date" field-name="updatedAt"/>
         <lifecycle-callbacks>

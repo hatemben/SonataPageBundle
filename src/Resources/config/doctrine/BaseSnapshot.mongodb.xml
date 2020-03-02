@@ -2,7 +2,7 @@
 <doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping                     http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
     <mapped-superclass name="Sonata\PageBundle\Document\BaseSnapshot">
         <field name="routeName" type="string" field-name="routeName"/>
-        <field name="pageAlias" type="string" field-name="page_alias" nullable="true"/>
+        <field name="pageAlias" type="string" field-name="pageAlias" nullable="true"/>
         <field name="type" type="string" field-name="type" nullable="true"/>
         <field name="position" type="integer" field-name="position"/>
         <field name="enabled" type="boolean" field-name="enabled"/>
