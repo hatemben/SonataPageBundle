@@ -18,8 +18,8 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block content %}
-
-    <h2>{{ 'title_message_create_page'|trans({}, 'SonataPageBundle') }}</h2>
+<div class="alert alert-danger alert-dismissible">
+    <h2><i class="icon fa fa-ban"></i>{{ 'title_message_create_page'|trans({}, 'SonataPageBundle') }}</h2>
 
     <p>
     {{ 'message_create_page'|trans({}, 'SonataPageBundle')}}
@@ -43,4 +43,5 @@ file that was distributed with this source code.
     {% else %}
         {{ 'pages.label_no_sites'|trans({}, 'SonataPageBundle') }}
     {% endif %}
+</div>
 {% endblock %}
