@@ -255,7 +255,7 @@ class PageAdmin extends AbstractAdmin
             ->add('pageAlias')
             ->add('parent')
             ->add('edited')
-            ->add('hybrid', 'doctrine_orm_callback', [
+         /*   ->add('hybrid', 'doctrine_orm_callback', [
                 'callback' => static function ($queryBuilder, $alias, $field, $data) {
                     if (\in_array($data['value'], ['hybrid', 'cms'], true)) {
                         $queryBuilder->andWhere(sprintf('%s.routeName %s :routeName', $alias, 'cms' === $data['value'] ? '=' : '!='));
@@ -271,7 +271,7 @@ class PageAdmin extends AbstractAdmin
                     'choice_translation_domain' => false,
                 ],
                 'field_type' => ChoiceType::class,
-            ])
+            ])*/
         ;
     }
 
