@@ -15,7 +15,7 @@ namespace Sonata\PageBundle\Document;
 
 use Sonata\DatagridBundle\Pager\Doctrine\Pager;
 use Sonata\DatagridBundle\ProxyQuery\Doctrine\ProxyQuery;
-use Sonata\Doctrine\Entity\BaseEntityManager;
+use Sonata\Doctrine\Document\BaseDocumentManager;
 use Sonata\PageBundle\Model\SiteManagerInterface;
 
 /**
@@ -23,7 +23,7 @@ use Sonata\PageBundle\Model\SiteManagerInterface;
  *
  * @author Thomas Rabaix <thomas.rabaix@sonata-project.org>
  */
-class SiteManager extends BaseEntityManager implements SiteManagerInterface
+class SiteManager extends BaseDocumentManager implements SiteManagerInterface
 {
     public function save($site, $andFlush = true)
     {

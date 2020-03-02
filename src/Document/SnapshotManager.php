@@ -16,7 +16,7 @@ namespace Sonata\PageBundle\Document;
 use Doctrine\Persistence\ManagerRegistry;
 use Sonata\DatagridBundle\Pager\Doctrine\Pager;
 use Sonata\DatagridBundle\ProxyQuery\Doctrine\ProxyQuery;
-use Sonata\Doctrine\Entity\BaseEntityManager;
+use Sonata\Doctrine\Document\BaseDocumentManager;
 use Sonata\PageBundle\Model\PageInterface;
 use Sonata\PageBundle\Model\SnapshotInterface;
 use Sonata\PageBundle\Model\SnapshotManagerInterface;
@@ -30,7 +30,7 @@ use Sonata\PageBundle\Model\TransformerInterface;
  *
  * @author Thomas Rabaix <thomas.rabaix@sonata-project.org>
  */
-class SnapshotManager extends BaseEntityManager implements SnapshotManagerInterface
+class SnapshotManager extends BaseDocumentManager implements SnapshotManagerInterface
 {
     /**
      * @var array

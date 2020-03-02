@@ -16,7 +16,7 @@ namespace Sonata\PageBundle\Document;
 use Doctrine\Persistence\ManagerRegistry;
 use Sonata\DatagridBundle\Pager\Doctrine\Pager;
 use Sonata\DatagridBundle\ProxyQuery\Doctrine\ProxyQuery;
-use Sonata\Doctrine\Entity\BaseEntityManager;
+use Sonata\Doctrine\Document\BaseDocumentManager;
 use Sonata\PageBundle\Model\Page;
 use Sonata\PageBundle\Model\PageInterface;
 use Sonata\PageBundle\Model\PageManagerInterface;
@@ -27,7 +27,7 @@ use Sonata\PageBundle\Model\SiteInterface;
  *
  * @author Thomas Rabaix <thomas.rabaix@sonata-project.org>
  */
-class PageManager extends BaseEntityManager implements PageManagerInterface
+class PageManager extends BaseDocumentManager implements PageManagerInterface
 {
     /**
      * @var array

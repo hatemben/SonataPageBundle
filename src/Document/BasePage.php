@@ -27,8 +27,8 @@ abstract class BasePage extends Page
     {
         parent::__construct();
 
-        $this->children = new ArrayCollection();
-        $this->blocks = new ArrayCollection();
+      //  $this->children = new ArrayCollection();
+       // $this->blocks = new ArrayCollection();
     }
 
     public function prePersist()

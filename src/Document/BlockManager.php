@@ -17,14 +17,14 @@ use Sonata\BlockBundle\Model\BlockInterface;
 use Sonata\BlockBundle\Model\BlockManagerInterface;
 use Sonata\DatagridBundle\Pager\Doctrine\Pager;
 use Sonata\DatagridBundle\ProxyQuery\Doctrine\ProxyQuery;
-use Sonata\Doctrine\Entity\BaseEntityManager;
+use Sonata\Doctrine\Document\BaseDocumentManager;
 
 /**
  * This class manages BlockInterface persistency with the Doctrine ORM.
  *
  * @author Thomas Rabaix <thomas.rabaix@sonata-project.org>
  */
-class BlockManager extends BaseEntityManager implements BlockManagerInterface
+class BlockManager extends BaseDocumentManager implements BlockManagerInterface
 {
     public function save($block, $andFlush = true)
     {
