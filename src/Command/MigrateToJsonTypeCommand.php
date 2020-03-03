@@ -30,8 +30,8 @@ class MigrateToJsonTypeCommand extends BaseCommand
     {
         $count = 0;
         $table = $input->getOption('table');
-        $connection = $this->getContainer()->get('doctrine.orm.entity_manager')->getConnection();
-        $blocks = $connection->fetchAll("SELECT * FROM $table");
+        $connection = $this->getContainer()->get('doctrine_mongodb.odm.document_manager')->getRepository($table);
+        $blocks = $connection->findAll();
 
         foreach ($blocks as $block) {
             // if the row need to migrate

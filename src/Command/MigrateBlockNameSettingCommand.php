@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Sonata\PageBundle\Command;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -33,8 +33,8 @@ class MigrateBlockNameSettingCommand extends BaseCommand
             'class',
             null,
             InputOption::VALUE_OPTIONAL,
-            'Block entity class',
-            'Application\Sonata\PageBundle\Entity\Block'
+            'Block document class',
+            'Application\Sonata\PageBundle\Document\Block'
         );
         $this->addOption(
             'update-name',
@@ -60,7 +60,7 @@ class MigrateBlockNameSettingCommand extends BaseCommand
                 unset($settings['orientation']);
                 $block->setSettings($settings);
 
-                $this->getEntityManager()->persist($block);
+                $this->getDocumentManager()->persist($block);
                 ++$count;
             }
 
@@ -76,16 +76,16 @@ class MigrateBlockNameSettingCommand extends BaseCommand
                     $block->setName($block->getSetting('code'));
                 }
 
-                $this->getEntityManager()->persist($block);
+                $this->getDocumentManager()->persist($block);
                 ++$count;
             }
 
             if ($count % 100) {
-                $this->getEntityManager()->flush();
+                $this->getDocumentManager()->flush();
             }
         }
 
-        $this->getEntityManager()->flush();
+        $this->getDocumentManager()->flush();
 
         $output->writeln("<info>Migrated $count blocks</info>");
     }
@@ -99,16 +99,16 @@ class MigrateBlockNameSettingCommand extends BaseCommand
      */
     protected function getRepository($class)
     {
-        return $this->getEntityManager()->getRepository($class);
+        return $this->getDocumentManager()->getRepository($class);
     }
 
     /**
      * Returns the entity manager.
      *
-     * @return EntityManager
+     * @return DocumentManager
      */
-    protected function getEntityManager()
+    protected function getDocumentManager()
     {
-        return $this->getContainer()->get('doctrine.orm.entity_manager');
+        return $this->getContainer()->get('doctrine_mongodb.odm.document_manager');
     }
 }
