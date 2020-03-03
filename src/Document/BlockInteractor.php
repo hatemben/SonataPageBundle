@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sonata\PageBundle\Document;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Sonata\BlockBundle\Model\BlockManagerInterface;
 use Sonata\PageBundle\Model\BlockInteractorInterface;
