@@ -13,7 +13,8 @@ declare(strict_types=1);
 
 namespace Sonata\PageBundle\Admin;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\Bundle\MongoDBBundle\Form\Type\DocumentType;
+use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\BlockBundle\Block\BlockServiceInterface;
@@ -138,15 +139,14 @@ class BlockAdmin extends BaseBlockAdmin
 
             // need to investigate on this case where $page == null ... this should not be possible
             if ($isStandardBlock && $page && !empty($containerBlockTypes)) {
-                $formMapper->add('parent', EntityType::class, [
+                $formMapper->add('parent', DocumentType::class, [
                     'class' => $this->getClass(),
-                    'query_builder' => static function (EntityRepository $repository) use ($page, $containerBlockTypes) {
-                        return $repository->createQueryBuilder('a')
-                            ->andWhere('a.page = :page AND a.type IN (:types)')
-                            ->setParameters([
-                                    'page' => $page,
-                                    'types' => $containerBlockTypes,
-                                ]);
+                    'query_builder' => static function (DocumentRepository $repository) use ($page, $containerBlockTypes) {
+                        return $repository->createQueryBuilder('App\Application\Sonata\PageBundle\Document\Block')
+                            ->field('page')->equals($page)
+                            ->field('types')->in($containerBlockTypes)
+                            ->getQuery()
+                            ->getSingleResult();
                     },
                 ], [
                     'admin_code' => $this->getCode(),
