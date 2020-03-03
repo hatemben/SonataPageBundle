@@ -20,7 +20,7 @@ use Sonata\DatagridBundle\ProxyQuery\Doctrine\ProxyQuery;
 use Sonata\Doctrine\Document\BaseDocumentManager;
 
 /**
- * This class manages BlockInterface persistency with the Doctrine ORM.
+ * This class manages BlockInterface persistency with the Doctrine ODM.
  *
  * @author Thomas Rabaix <thomas.rabaix@sonata-project.org>
  */
@@ -50,12 +50,12 @@ class BlockManager extends BaseDocumentManager implements BlockManagerInterface
             $meta = $this->getEntityManager()->getClassMetadata($this->getClass());
 
             // retrieve object references
-            $block = $this->getEntityManager()->getReference($this->getClass(), $id);
+            $block = $this->getDocumentManager()->getReference($this->getClass(), $id);
             $pageRelation = $meta->getAssociationMapping('page');
-            $page = $this->getEntityManager()->getPartialReference($pageRelation['targetEntity'], $pageId);
+            $page = $this->getDocumentManager()->getPartialReference($pageRelation['targetEntity'], $pageId);
 
             $parentRelation = $meta->getAssociationMapping('parent');
-            $parent = $this->getEntityManager()->getPartialReference($parentRelation['targetEntity'], $parentId);
+            $parent = $this->getDocumentManager()->getPartialReference($parentRelation['targetEntity'], $parentId);
 
             $block->setPage($page);
             $block->setParent($parent);
@@ -65,7 +65,7 @@ class BlockManager extends BaseDocumentManager implements BlockManagerInterface
 
         // set new values
         $block->setPosition($position);
-        $this->getEntityManager()->persist($block);
+        $this->getDocumentManager()->persist($block);
 
         return $block;
     }

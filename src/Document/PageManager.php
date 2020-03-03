@@ -24,7 +24,7 @@ use Sonata\PageBundle\Model\PageManagerInterface;
 use Sonata\PageBundle\Model\SiteInterface;
 
 /**
- * This class manages PageInterface persistency with the Doctrine ORM.
+ * This class manages PageInterface persistency with the Doctrine ODM.
  *
  * @author Thomas Rabaix <thomas.rabaix@sonata-project.org>
  */
@@ -194,9 +194,16 @@ class PageManager extends BaseDocumentManager implements PageManagerInterface
 
     public function loadPages(SiteInterface $site)
     {
-        $pages = $this->getDocumentManager()
+        $allpages = $this->getDocumentManager()
             ->getRepository($this->class)
-            ->findBy(['site.$id'=>$site->getId()]);
+            ->findBy(['site.$id'=>new ObjectId($site->getId())]);
+
+        if ($allpages) {
+            foreach ($allpages as $page){
+                $pages[$page->getId()] = $page;
+            }
+            unset($allpages);
+        }
 
         if ($pages == null){
             $pages = [];
@@ -210,8 +217,11 @@ class PageManager extends BaseDocumentManager implements PageManagerInterface
                 continue;
             }
 
-            $pages[$parent->getId()]->disableChildrenLazyLoading();
-            $pages[$parent->getId()]->addChildren($page);
+            if (isset($pages[$parent->getId()])){
+                $pages[$parent->getId()]->disableChildrenLazyLoading();
+                $pages[$parent->getId()]->addChildren($page);
+            }
+
         }
 
         return $pages;

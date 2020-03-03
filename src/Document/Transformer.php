@@ -14,8 +14,9 @@ declare(strict_types=1);
 namespace Sonata\PageBundle\Document;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\Persistence\ManagerRegistry;
+use MongoDB\BSON\ObjectId;
 use Sonata\BlockBundle\Model\BlockInterface;
 use Sonata\BlockBundle\Model\BlockManagerInterface;
 use Sonata\PageBundle\Model\PageInterface;
@@ -66,7 +67,6 @@ class Transformer implements TransformerInterface
     public function create(PageInterface $page)
     {
         $snapshot = $this->snapshotManager->create();
-
         $snapshot->setPage($page);
         $snapshot->setUrl($page->getUrl());
         $snapshot->setEnabled($page->getEnabled());
@@ -96,17 +96,17 @@ class Transformer implements TransformerInterface
         $content['name'] = $page->getName();
         $content['javascript'] = $page->getJavascript();
         $content['stylesheet'] = $page->getStylesheet();
-        $content['raw_headers'] = $page->getRawHeaders();
+        $content['rawHeaders'] = $page->getRawHeaders();
         $content['title'] = $page->getTitle();
-        $content['meta_description'] = $page->getMetaDescription();
-        $content['meta_keyword'] = $page->getMetaKeyword();
-        $content['template_code'] = $page->getTemplateCode();
-        $content['request_method'] = $page->getRequestMethod();
-        $content['created_at'] = $page->getCreatedAt()->format('U');
-        $content['updated_at'] = $page->getUpdatedAt()->format('U');
+        $content['metaDescription'] = $page->getMetaDescription();
+        $content['metaKeyword'] = $page->getMetaKeyword();
+        $content['templateCode'] = $page->getTemplateCode();
+        $content['requestMethod'] = $page->getRequestMethod();
+        $content['createdAt'] = $page->getCreatedAt()->format('U');
+        $content['updatedAt'] = $page->getUpdatedAt()->format('U');
         $content['slug'] = $page->getSlug();
-        $content['parent_id'] = $page->getParent() ? $page->getParent()->getId() : null;
-        $content['target_id'] = $page->getTarget() ? $page->getTarget()->getId() : null;
+        $content['parentId'] = $page->getParent() ? $page->getParent()->getId() : null;
+        $content['targetId'] = $page->getTarget() ? $page->getTarget()->getId() : null;
 
         $content['blocks'] = [];
         foreach ($page->getBlocks() as $block) {
@@ -143,19 +143,19 @@ class Transformer implements TransformerInterface
         $page->setStylesheet($content['stylesheet']);
         $page->setRawHeaders($content['raw_headers']);
         $page->setTitle($content['title']);
-        $page->setMetaDescription($content['meta_description']);
-        $page->setMetaKeyword($content['meta_keyword']);
+        $page->setMetaDescription($content['metaDescription']);
+        $page->setMetaKeyword($content['metaKeyword']);
         $page->setName($content['name']);
         $page->setSlug($content['slug']);
-        $page->setTemplateCode($content['template_code']);
-        $page->setRequestMethod($content['request_method']);
+        $page->setTemplateCode($content['templateCode']);
+        $page->setRequestMethod($content['requestMethod']);
 
         $createdAt = new \DateTime();
-        $createdAt->setTimestamp((int) $content['created_at']);
+        $createdAt->setTimestamp((int) $content['createdAt']);
         $page->setCreatedAt($createdAt);
 
         $updatedAt = new \DateTime();
-        $updatedAt->setTimestamp((int) $content['updated_at']);
+        $updatedAt->setTimestamp((int) $content['updatedAt']);
         $page->setUpdatedAt($updatedAt);
 
         return $page;
@@ -176,11 +176,11 @@ class Transformer implements TransformerInterface
         $block->setType($content['type']);
 
         $createdAt = new \DateTime();
-        $createdAt->setTimestamp((int) $content['created_at']);
+        $createdAt->setTimestamp((int) $content['createdAt']);
         $block->setCreatedAt($createdAt);
 
         $updatedAt = new \DateTime();
-        $updatedAt->setTimestamp((int) $content['updated_at']);
+        $updatedAt->setTimestamp((int) $content['updatedAt']);
         $block->setUpdatedAt($updatedAt);
 
         foreach ($content['blocks'] as $child) {
@@ -202,19 +202,17 @@ class Transformer implements TransformerInterface
 
             $manager = $this->registry->getManagerForClass($this->snapshotManager->getClass());
 
-            if (!$manager instanceof EntityManagerInterface) {
-                throw new \RuntimeException('Invalid entity manager type');
+            if (!$manager instanceof DocumentManager) {
+                throw new \RuntimeException('Invalid document manager type');
             }
 
-            $snapshots = $manager->createQueryBuilder()
-                ->select('s')
-                ->from($this->snapshotManager->getClass(), 's')
-                ->where('s.parentId = :parentId and s.enabled = 1')
-                ->andWhere('s.publicationDateStart <= :publicationDateStart AND ( s.publicationDateEnd IS NULL OR s.publicationDateEnd >= :publicationDateEnd )')
-                ->orderBy('s.position')
-                ->setParameters($parameters)
+            $snapshots = $manager->createQueryBuilder($this->snapshotManager->getClass())
+                ->field('parentId.$id')->equals(new ObjectId($parent->getId()))
+                ->field('publicationDateStart')->lte($date)
+                ->field('publicationDateEnd')->gte($date)
+                ->sort('position')
                 ->getQuery()
-                ->execute();
+                ->getSingleResult();
 
             $pages = [];
 
@@ -269,8 +267,8 @@ class Transformer implements TransformerInterface
         $content['position'] = $block->getPosition();
         $content['settings'] = $block->getSettings();
         $content['type'] = $block->getType();
-        $content['created_at'] = $block->getCreatedAt()->format('U');
-        $content['updated_at'] = $block->getUpdatedAt()->format('U');
+        $content['createdAt'] = $block->getCreatedAt()->format('U');
+        $content['updatedAt'] = $block->getUpdatedAt()->format('U');
         $content['blocks'] = [];
 
         foreach ($block->getChildren() as $child) {

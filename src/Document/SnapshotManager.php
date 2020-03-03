@@ -26,7 +26,7 @@ use Sonata\PageBundle\Model\SnapshotPageProxyFactoryInterface;
 use Sonata\PageBundle\Model\TransformerInterface;
 
 /**
- * This class manages SnapshotInterface persistency with the Doctrine ORM.
+ * This class manages SnapshotInterface persistency with the Doctrine ODM.
  *
  * @author Thomas Rabaix <thomas.rabaix@sonata-project.org>
  */
@@ -93,20 +93,26 @@ class SnapshotManager extends BaseDocumentManager implements SnapshotManagerInte
             $snapshot->setPublicationDateStart($date);
             $snapshot->setPublicationDateEnd(null);
 
-            $this->getEntityManager()->persist($snapshot);
+            $this->getDocumentManager()->persist($snapshot);
         }
 
         $this->getEntityManager()->flush();
         //@todo: strange sql and low-level pdo usage: use dql or qb
-        $sql = sprintf(
+     /*   $sql = sprintf(
             "UPDATE %s SET publication_date_end = '%s' WHERE id NOT IN(%s) AND page_id IN (%s)",
             $this->getTableName(),
             $date->format('Y-m-d H:i:s'),
             implode(',', $snapshotIds),
             implode(',', $pageIds)
         );
+*/
+        $this->getDocumentManager()->createQueryBuilder($this->getTableName())
+            ->findAndUpdate()
+            ->field('_id')->notIn($snapshotIds)
+            ->field('pageId')->notIn($pageIds)
+            ->field('publicationDateEnd')->set(new \MongoDB\BSON\UTCDateTime());
 
-        $this->getConnection()->query($sql);
+  //      $this->getConnection()->query($sql);
     }
 
     public function findEnableSnapshot(array $criteria)
@@ -117,11 +123,18 @@ class SnapshotManager extends BaseDocumentManager implements SnapshotManagerInte
             'publicationDateEnd' => $date,
         ];
 
-        $query = $this->getRepository()
+        $query = $this->getDocumentManager()
+            ->createQueryBuilder($this->class)
+            ->field('publicationDateStart')->lt($date)
+            ->field('enabled')->equals('true')
+            ->field('publicationDateEnd')->gt($date);
+/*
+            ->getRepository($this->class)
+            ->findBy(['publicationDateStart'=>$routeName])
             ->createQueryBuilder('s')
             ->andWhere('s.publicationDateStart <= :publicationDateStart AND ( s.publicationDateEnd IS NULL OR s.publicationDateEnd >= :publicationDateEnd )')
             ->andWhere('s.enabled = true')
-        ;
+        ;*/
 
         if (isset($criteria['site'])) {
             $query->andWhere('s.site = :site');
@@ -169,7 +182,12 @@ class SnapshotManager extends BaseDocumentManager implements SnapshotManagerInte
             E_USER_DEPRECATED
         );
 
-        $snapshots = $this->getEntityManager()->createQueryBuilder()
+        $snapshots = $this->getDocumentManager()
+            ->getRepository($this->class)
+            ->findBy(['routeName'=>$routeName]);
+            /*
+        createQueryBuilder($this->class)
+
             ->select('s')
             ->from($this->class, 's')
             ->where('s.routeName = :routeName')
@@ -177,7 +195,7 @@ class SnapshotManager extends BaseDocumentManager implements SnapshotManagerInte
                 'routeName' => $routeName,
             ])
             ->getQuery()
-            ->execute();
+            ->execute();*/
 
         $snapshot = \count($snapshots) > 0 ? $snapshots[0] : false;
 

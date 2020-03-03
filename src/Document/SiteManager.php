@@ -19,7 +19,7 @@ use Sonata\Doctrine\Document\BaseDocumentManager;
 use Sonata\PageBundle\Model\SiteManagerInterface;
 
 /**
- * This class manages SiteInterface persistency with the Doctrine ORM.
+ * This class manages SiteInterface persistency with the Doctrine ODM.
  *
  * @author Thomas Rabaix <thomas.rabaix@sonata-project.org>
  */
