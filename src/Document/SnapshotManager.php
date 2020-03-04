@@ -110,7 +110,8 @@ class SnapshotManager extends BaseDocumentManager implements SnapshotManagerInte
             ->findAndUpdate()
             ->field('_id')->notIn($snapshotIds)
             ->field('pageId')->notIn($pageIds)
-            ->field('publicationDateEnd')->set(new \MongoDB\BSON\UTCDateTime());
+            ->field('publicationDateEnd')->set(new \MongoDB\BSON\UTCDateTime())
+        ->getQuery();
 
   //      $this->getConnection()->query($sql);
     }
