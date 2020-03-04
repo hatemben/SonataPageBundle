@@ -22,6 +22,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\Cache\CacheManagerInterface;
+use Sonata\DoctrineMongoDBAdminBundle\Filter\CallbackFilter;
 use Sonata\PageBundle\Exception\InternalErrorException;
 use Sonata\PageBundle\Exception\PageNotFoundException;
 use Sonata\PageBundle\Form\Type\PageSelectorType;
@@ -155,7 +156,7 @@ class PageAdmin extends AbstractAdmin
         $siteId = (null !== $siteId) ? $siteId : $this->getRequest()->get('siteId');
 
         if ($siteId) {
-            $site = $this->siteManager->findOneBy(['id' => $siteId]);
+            $site = $this->siteManager->findOneBy(['_id' => $siteId]);
 
             if (!$site) {
                 throw new \RuntimeException('Unable to find the site with id='.$this->getRequest()->get('siteId'));
@@ -233,7 +234,7 @@ class PageAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-         //   ->add('hybrid', 'text', ['template' => '@SonataPage/PageAdmin/field_hybrid.html.twig'])
+            ->add('hybrid', 'text', ['template' => '@SonataPage/PageAdmin/field_hybrid.html.twig'])
             ->addIdentifier('name')
             ->add('type')
             ->add('pageAlias')
@@ -249,13 +250,13 @@ class PageAdmin extends AbstractAdmin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('site')
+       //     ->add('site')
             ->add('name')
             ->add('type', null, ['field_type' => PageTypeChoiceType::class])
             ->add('pageAlias')
             ->add('parent')
             ->add('edited')
-         /*   ->add('hybrid', 'doctrine_orm_callback', [
+            ->add('hybrid', CallbackFilter::class, [
                 'callback' => static function ($queryBuilder, $alias, $field, $data) {
                     if (\in_array($data['value'], ['hybrid', 'cms'], true)) {
                         $queryBuilder->andWhere(sprintf('%s.routeName %s :routeName', $alias, 'cms' === $data['value'] ? '=' : '!='));
@@ -271,7 +272,7 @@ class PageAdmin extends AbstractAdmin
                     'choice_translation_domain' => false,
                 ],
                 'field_type' => ChoiceType::class,
-            ])*/
+            ])
         ;
     }
 
@@ -432,6 +433,7 @@ class PageAdmin extends AbstractAdmin
         );
 
         $page = $this->getSubject();
+
         if (!$page->isHybrid() && !$page->isInternal()) {
             try {
                 $path = $page->getUrl();
@@ -449,5 +451,6 @@ class PageAdmin extends AbstractAdmin
                 // throw $e;
             }
         }
+        //*/
     }
 }
