@@ -96,7 +96,7 @@ class SnapshotManager extends BaseDocumentManager implements SnapshotManagerInte
             $this->getDocumentManager()->persist($snapshot);
         }
 
-        $this->getEntityManager()->flush();
+        $this->getDocumentManager()->flush();
         //@todo: strange sql and low-level pdo usage: use dql or qb
      /*   $sql = sprintf(
             "UPDATE %s SET publication_date_end = '%s' WHERE id NOT IN(%s) AND page_id IN (%s)",
@@ -106,7 +106,7 @@ class SnapshotManager extends BaseDocumentManager implements SnapshotManagerInte
             implode(',', $pageIds)
         );
 */
-        $this->getDocumentManager()->createQueryBuilder($this->getTableName())
+        $this->getDocumentManager()->createQueryBuilder($this->getClass())
             ->findAndUpdate()
             ->field('_id')->notIn($snapshotIds)
             ->field('pageId')->notIn($pageIds)
