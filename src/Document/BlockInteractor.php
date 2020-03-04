@@ -54,7 +54,7 @@ class BlockInteractor implements BlockInteractorInterface
 
     public function getBlock($id)
     {
-        $blocks = $this->getEntityManager()->createQueryBuilder()
+        $blocks = $this->getDocumentManager()->createQueryBuilder()
             ->select('b')
             ->from($this->blockManager->getClass(), 'b')
             ->where('b.id = :id')
@@ -69,7 +69,7 @@ class BlockInteractor implements BlockInteractorInterface
 
     public function getBlocksById(PageInterface $page)
     {
-        $blocks = $this->getEntityManager()
+        $blocks = $this->getDocumentManager()
             ->createQuery(sprintf('SELECT b FROM %s b INDEX BY b.id WHERE b.page = :page ORDER BY b.position ASC', $this->blockManager->getClass()))
             ->setParameters([
                  'page' => $page->getId(),
@@ -81,7 +81,7 @@ class BlockInteractor implements BlockInteractorInterface
 
     public function saveBlocksPosition(array $data = [], $partial = true)
     {
-        $em = $this->getEntityManager();
+        $em = $this->getDocumentManager();
         $em->getConnection()->beginTransaction();
 
         try {
@@ -168,9 +168,9 @@ class BlockInteractor implements BlockInteractorInterface
     }
 
     /**
-     * @return EntityManager
+     * @return DocumentManager
      */
-    private function getEntityManager()
+    private function getDocumentManager()
     {
         return $this->registry->getManagerForClass($this->blockManager->getClass());
     }
