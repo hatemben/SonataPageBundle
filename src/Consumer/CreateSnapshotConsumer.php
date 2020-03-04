@@ -51,19 +51,17 @@ class CreateSnapshotConsumer implements ConsumerInterface
     public function process(ConsumerEvent $event)
     {
         $pageId = $event->getMessage()->getValue('pageId');
-
-        $page = $this->pageManager->findOneBy(['id' => $pageId]);
+        $page = $this->pageManager->findOneBy(['_id' => $pageId]);
 
         if (!$page) {
             return;
         }
 
         // start a transaction
-        $this->snapshotManager->getConnection()->beginTransaction();
+   //     $this->snapshotManager->getConnection()->beginTransaction();
 
         // creating snapshot
         $snapshot = $this->transformer->create($page);
-
         // update the page status
         $page->setEdited(false);
         $this->pageManager->save($page);
@@ -73,6 +71,6 @@ class CreateSnapshotConsumer implements ConsumerInterface
         $this->snapshotManager->enableSnapshots([$snapshot]);
 
         // commit the changes
-        $this->snapshotManager->getConnection()->commit();
+      //  $this->snapshotManager->getConnection()->commit();
     }
 }
