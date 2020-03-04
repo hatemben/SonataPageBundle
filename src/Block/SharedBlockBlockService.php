@@ -120,8 +120,8 @@ class SharedBlockBlockService extends AbstractAdminBlockService
     {
         $sharedBlock = $block->getSetting('blockId', null);
 
-        if (\is_int($sharedBlock)) {
-            $sharedBlock = $this->blockManager->findOneBy(['id' => $sharedBlock]);
+        if (\is_string($sharedBlock)) {
+            $sharedBlock = $this->blockManager->findOneBy(['_id' => $sharedBlock]);
         }
 
         $block->setSetting('blockId', $sharedBlock);
