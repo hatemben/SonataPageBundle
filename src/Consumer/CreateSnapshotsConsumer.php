@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sonata\PageBundle\Consumer;
 
+use MongoDB\BSON\ObjectId;
 use Sonata\NotificationBundle\Backend\BackendInterface;
 use Sonata\NotificationBundle\Consumer\ConsumerEvent;
 use Sonata\NotificationBundle\Consumer\ConsumerInterface;
@@ -50,7 +51,7 @@ class CreateSnapshotsConsumer implements ConsumerInterface
     public function process(ConsumerEvent $event)
     {
         $pages = $this->pageManager->findBy([
-            'site' => $event->getMessage()->getValue('siteId'),
+            'site.$id' => new ObjectId($event->getMessage()->getValue('siteId')),
         ]);
 
         $backend = 'async' === $event->getMessage()->getValue('mode') ? $this->asyncBackend : $this->runtimeBackend;
