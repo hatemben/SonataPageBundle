@@ -102,10 +102,11 @@ abstract class BaseSiteSelector implements SiteSelectorInterface
      */
     protected function getSites(Request $request)
     {
+
         // sort by isDefault DESC in order to have default site in first position
         // which will be used if no site found for the current request
-        return $this->siteManager->findBy([
-            'host' => [$request->getHost(), 'localhost'],
+        return  $this->siteManager->findBy([
+            'host' => $request->getHost(),
             'enabled' => true,
         ], [
             'isDefault' => 'DESC',
