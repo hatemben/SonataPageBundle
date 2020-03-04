@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sonata\PageBundle\CmsManager;
 
+use MongoDB\BSON\ObjectId;
 use Sonata\BlockBundle\Model\BlockInterface;
 use Sonata\PageBundle\Exception\PageNotFoundException;
 use Sonata\PageBundle\Model\BlockInteractorInterface;
@@ -55,6 +56,7 @@ class CmsPageManager extends BaseCmsPageManager
 
     public function getPage(SiteInterface $site, $page)
     {
+
         if (\is_string($page) && '/' === substr($page, 0, 1)) {
             $page = $this->getPageByUrl($site, $page);
         } elseif (\is_string($page)) { // page is a slug, load the related page
@@ -83,13 +85,13 @@ class CmsPageManager extends BaseCmsPageManager
         try {
             $page = $this->getPageByRouteName($site, $routeName);
         } catch (PageNotFoundException $e) {
+
             $page = $this->pageManager->create([
                 'url' => null,
                 'routeName' => $routeName,
                 'name' => sprintf(sprintf('Internal Page : %s', $pageName)),
                 'decorate' => false,
             ]);
-
             $page->setSite($site);
 
             $this->pageManager->save($page);
@@ -152,14 +154,15 @@ class CmsPageManager extends BaseCmsPageManager
         }
 
         if (null === $id || !isset($this->pages[$id])) {
-            $this->pages[$id] = false;
+
+//            $this->pages[$id] = false;
 
             $parameters = [
                 $fieldName => $value,
             ];
 
             if ($site) {
-                $parameters['site'] = $site->getId();
+                $parameters['site.$id'] = new ObjectId($site->getId());
             }
 
             $page = $this->pageManager->findOneBy($parameters);
@@ -177,7 +180,6 @@ class CmsPageManager extends BaseCmsPageManager
 
             $this->pages[$id] = $page;
         }
-
         return $this->pages[$id];
     }
 
