@@ -15,6 +15,7 @@ namespace Sonata\PageBundle\Document;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\Persistence\ManagerRegistry;
+use MongoDB\BSON\ObjectId;
 use Sonata\BlockBundle\Model\BlockManagerInterface;
 use Sonata\PageBundle\Model\BlockInteractorInterface;
 use Sonata\PageBundle\Model\PageInterface;
@@ -70,12 +71,15 @@ class BlockInteractor implements BlockInteractorInterface
     public function getBlocksById(PageInterface $page)
     {
         $blocks = $this->getDocumentManager()
-            ->createQuery(sprintf('SELECT b FROM %s b INDEX BY b.id WHERE b.page = :page ORDER BY b.position ASC', $this->blockManager->getClass()))
-            ->setParameters([
-                 'page' => $page->getId(),
-            ])
-            ->execute();
-
+            ->getRepository($this->blockManager->getClass())
+            ->findBy(['page.$id'=>new ObjectId($page->getId())]);
+        // workaround to keep blocks ids in result array.
+        if ($blocks) {
+            foreach ($blocks as $block) {
+                $newblocks[$block->getId()] = $block;
+            }
+            $blocks = $newblocks;
+        }
         return $blocks;
     }
 
