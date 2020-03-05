@@ -141,7 +141,7 @@ class Transformer implements TransformerInterface
         $page->setId($content['id']);
         $page->setJavascript($content['javascript']);
         $page->setStylesheet($content['stylesheet']);
-        $page->setRawHeaders($content['raw_headers']);
+        $page->setRawHeaders($content['rawHeaders']);
         $page->setTitle($content['title']);
         $page->setMetaDescription($content['metaDescription']);
         $page->setMetaKeyword($content['metaKeyword']);
@@ -210,6 +210,7 @@ class Transformer implements TransformerInterface
                 ->field('parentId.$id')->equals(new ObjectId($parent->getId()))
                 ->field('publicationDateStart')->lte($date)
                 ->field('publicationDateEnd')->gte($date)
+              //  ->field('enabled')->equals(true)
                 ->sort('position')
                 ->getQuery()
                 ->getSingleResult();
