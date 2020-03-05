@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sonata\PageBundle\Document;
 
 use Doctrine\Persistence\ManagerRegistry;
+use MongoDB\BSON\ObjectId;
 use Sonata\DatagridBundle\Pager\Doctrine\Pager;
 use Sonata\DatagridBundle\ProxyQuery\Doctrine\ProxyQuery;
 use Sonata\Doctrine\Document\BaseDocumentManager;
@@ -118,53 +119,36 @@ class SnapshotManager extends BaseDocumentManager implements SnapshotManagerInte
 
     public function findEnableSnapshot(array $criteria)
     {
-        $date = new \Datetime();
+        $date = new \DateTime();
         $parameters = [
             'publicationDateStart' => $date,
             'publicationDateEnd' => $date,
         ];
-
         $query = $this->getDocumentManager()
             ->createQueryBuilder($this->class)
-            ->field('publicationDateStart')->lt($date)
-            ->field('enabled')->equals('true')
-            ->field('publicationDateEnd')->gt($date);
-/*
-            ->getRepository($this->class)
-            ->findBy(['publicationDateStart'=>$routeName])
-            ->createQueryBuilder('s')
-            ->andWhere('s.publicationDateStart <= :publicationDateStart AND ( s.publicationDateEnd IS NULL OR s.publicationDateEnd >= :publicationDateEnd )')
-            ->andWhere('s.enabled = true')
-        ;*/
+            ->field('publicationDateStart')->lte($date)
+            ->field('enabled')->equals(true)
+            ->field('publicationDateEnd')->gte($date);
+
 
         if (isset($criteria['site'])) {
-            $query->andWhere('s.site = :site');
-            $parameters['site'] = $criteria['site'];
+            $query->field('site.$id')->equals(new ObjectId($criteria['site']));
         }
 
         if (isset($criteria['pageId'])) {
-            $query->andWhere('s.page = :page');
-            $parameters['page'] = $criteria['pageId'];
+            $query->field('page.$id')->equals(new ObjectId($criteria['pageId']));
         } elseif (isset($criteria['url'])) {
-            $query->andWhere('s.url = :url');
-            $parameters['url'] = $criteria['url'];
+            $query->field('url')->equals($criteria['url']);
         } elseif (isset($criteria['routeName'])) {
-            $query->andWhere('s.routeName = :routeName');
-            $parameters['routeName'] = $criteria['routeName'];
+            $query->field('routeName')->equals($criteria['routeName']);
         } elseif (isset($criteria['pageAlias'])) {
-            $query->andWhere('s.pageAlias = :pageAlias');
-            $parameters['pageAlias'] = $criteria['pageAlias'];
+            $query->field('pageAlias')->equals($criteria['pageAlias']);
         } elseif (isset($criteria['name'])) {
-            $query->andWhere('s.name = :name');
-            $parameters['name'] = $criteria['name'];
+            $query->field('name')->equals($criteria['name']);
         } else {
             throw new \RuntimeException('please provide a `pageId`, `url`, `routeName` or `name` as criteria key');
         }
-
-        $query->setMaxResults(1);
-        $query->setParameters($parameters);
-
-        return $query->getQuery()->getOneOrNullResult();
+        return $query->getQuery()->getSingleResult();
     }
 
     /**
@@ -186,17 +170,7 @@ class SnapshotManager extends BaseDocumentManager implements SnapshotManagerInte
         $snapshots = $this->getDocumentManager()
             ->getRepository($this->class)
             ->findBy(['routeName'=>$routeName]);
-            /*
-        createQueryBuilder($this->class)
 
-            ->select('s')
-            ->from($this->class, 's')
-            ->where('s.routeName = :routeName')
-            ->setParameters([
-                'routeName' => $routeName,
-            ])
-            ->getQuery()
-            ->execute();*/
 
         $snapshot = \count($snapshots) > 0 ? $snapshots[0] : false;
 
