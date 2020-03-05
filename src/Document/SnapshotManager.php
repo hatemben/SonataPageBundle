@@ -120,10 +120,6 @@ class SnapshotManager extends BaseDocumentManager implements SnapshotManagerInte
     public function findEnableSnapshot(array $criteria)
     {
         $date = new \DateTime();
-        $parameters = [
-            'publicationDateStart' => $date,
-            'publicationDateEnd' => $date,
-        ];
         $query = $this->getDocumentManager()
             ->createQueryBuilder($this->class)
             ->field('publicationDateStart')->lte($date)
@@ -148,6 +144,7 @@ class SnapshotManager extends BaseDocumentManager implements SnapshotManagerInte
         } else {
             throw new \RuntimeException('please provide a `pageId`, `url`, `routeName` or `name` as criteria key');
         }
+
         return $query->getQuery()->getSingleResult();
     }
 
