@@ -186,12 +186,12 @@ class SnapshotPageProxy implements SnapshotPageProxyInterface
             while ($snapshot) {
                 $content = $snapshot->getContent();
 
-                if (!$content['parent_id']) {
+                if (!$content['parentId']) {
                     break;
                 }
 
                 $snapshot = $this->manager->findEnableSnapshot([
-                    'pageId' => $content['parent_id'],
+                    'pageId' => $content['parentId'],
                 ]);
 
                 if (!$snapshot) {
