@@ -206,12 +206,17 @@ class Transformer implements TransformerInterface
                 throw new \RuntimeException('Invalid document manager type');
             }
 
-            $snapshots = $manager->createQueryBuilder($this->snapshotManager->getClass())
-                ->field('parentId.$id')->equals(new ObjectId($parent->getId()))
-                ->field('publicationDateStart')->lte($date)
-                ->field('publicationDateEnd')->gte($date)
-              //  ->field('enabled')->equals(true)
-                ->sort('position')
+            $builder = $manager->createQueryBuilder($this->snapshotManager->getClass());
+
+            $builder->field('parentId.$id')->equals(new ObjectId($parent->getId()))
+                    ->addOr(
+                    $builder->expr()
+                        ->field('publicationDateEnd')->equals(null)
+                        ->field('publicationDateEnd')->gte($date),
+                    $builder->expr()->field('publicationDateStart')->lte($date)
+                );
+
+            $snapshots = $builder->sort('position')
                 ->getQuery()
                 ->getSingleResult();
 
