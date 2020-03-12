@@ -98,34 +98,28 @@ class SnapshotManager extends BaseDocumentManager implements SnapshotManagerInte
         }
 
         $this->getDocumentManager()->flush();
-        //@todo: strange sql and low-level pdo usage: use dql or qb
-     /*   $sql = sprintf(
-            "UPDATE %s SET publication_date_end = '%s' WHERE id NOT IN(%s) AND page_id IN (%s)",
-            $this->getTableName(),
-            $date->format('Y-m-d H:i:s'),
-            implode(',', $snapshotIds),
-            implode(',', $pageIds)
-        );
-*/
         $this->getDocumentManager()->createQueryBuilder($this->getClass())
             ->findAndUpdate()
             ->field('_id')->notIn($snapshotIds)
             ->field('pageId')->notIn($pageIds)
             ->field('publicationDateEnd')->set(new \MongoDB\BSON\UTCDateTime())
         ->getQuery();
-
-  //      $this->getConnection()->query($sql);
     }
 
     public function findEnableSnapshot(array $criteria)
     {
         $date = new \DateTime();
-        $query = $this->getDocumentManager()
-            ->createQueryBuilder($this->class)
-            ->field('publicationDateStart')->lte($date)
-            ->field('enabled')->equals(true)
-            ->field('publicationDateEnd')->gte($date);
+        $builder = $this->getDocumentManager()
+            ->createQueryBuilder($this->class);
 
+        $builder->addOr(
+            $builder->expr()
+                ->field('publicationDateEnd')->equals(null)
+                ->field('publicationDateEnd')->gte($date),
+            $builder->expr()->field('publicationDateStart')->lte($date)
+        );
+
+        $query = $builder;
 
         if (isset($criteria['site'])) {
             $query->field('site.$id')->equals(new ObjectId($criteria['site']));
@@ -144,7 +138,6 @@ class SnapshotManager extends BaseDocumentManager implements SnapshotManagerInte
         } else {
             throw new \RuntimeException('please provide a `pageId`, `url`, `routeName` or `name` as criteria key');
         }
-
         return $query->getQuery()->getSingleResult();
     }
 
