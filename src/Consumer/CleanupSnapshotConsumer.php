@@ -53,13 +53,8 @@ class CleanupSnapshotConsumer implements ConsumerInterface
             return;
         }
 
-        // start a transaction
-        $this->snapshotManager->getConnection()->beginTransaction();
-
         // cleanup snapshots
         $this->snapshotManager->cleanup($page, $event->getMessage()->getValue('keepSnapshots'));
 
-        // commit the changes
-        $this->snapshotManager->getConnection()->commit();
     }
 }

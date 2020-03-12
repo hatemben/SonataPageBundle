@@ -209,60 +209,12 @@ class SnapshotManager extends BaseDocumentManager implements SnapshotManagerInte
             throw new \RuntimeException(sprintf('Please provide an integer value, %s given', \gettype($keep)));
         }
 
-        $tableName = $this->getTableName();
-        $platform = $this->getConnection()->getDatabasePlatform()->getName();
-
-        if ('mysql' === $platform) {
-            return $this->getConnection()->exec(sprintf(
-                'DELETE FROM %s
-                WHERE
-                    page_id = %d
-                    AND id NOT IN (
-                        SELECT id
-                        FROM (
-                            SELECT id, publication_date_end
-                            FROM %s
-                            WHERE
-                                page_id = %d
-                            ORDER BY
-                                publication_date_end IS NULL DESC,
-                                publication_date_end DESC
-                            LIMIT %d
-                        ) AS table_alias
-                )',
-                $tableName,
-                $page->getId(),
-                $tableName,
-                $page->getId(),
-                $keep
-            ));
-        }
-
-        if ('oracle' === $platform) {
-            return $this->getConnection()->exec(sprintf(
-                'DELETE FROM %s
-                WHERE
-                    page_id = %d
-                    AND id NOT IN (
-                        SELECT id
-                        FROM (
-                            SELECT id, publication_date_end
-                            FROM %s
-                            WHERE
-                                page_id = %d
-                                AND rownum <= %d
-                            ORDER BY publication_date_end DESC
-                        ) table_alias
-                )',
-                $tableName,
-                $page->getId(),
-                $tableName,
-                $page->getId(),
-                $keep
-            ));
-        }
-
-        throw new \RuntimeException(sprintf('The %s database platform has not been tested yet. Please report us if it works and feel free to create a pull request to handle it ;-)', $platform));
+        return  $this->getDocumentManager()
+            ->createQueryBuilder($this->class)
+            ->remove()
+            ->field('page.$id')->equals(new ObjectId($page->getId()))
+        ->getQuery()
+        ->execute();
     }
 
     public function getPager(array $criteria, $page, $limit = 10, array $sort = [])
