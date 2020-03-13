@@ -138,7 +138,9 @@ class SnapshotManager extends BaseDocumentManager implements SnapshotManagerInte
         } else {
             throw new \RuntimeException('please provide a `pageId`, `url`, `routeName` or `name` as criteria key');
         }
-        return $query->getQuery()->getSingleResult();
+        
+	$query->sort('createdAt','DESC');
+	return $query->getQuery()->getSingleResult();
     }
 
     /**
