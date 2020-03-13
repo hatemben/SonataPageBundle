@@ -123,5 +123,6 @@ class SiteAdmin extends AbstractAdmin
     protected function configureRoutes(RouteCollection $collection)
     {
         $collection->add('snapshots', $this->getRouterIdParameter().'/snapshots');
+        $collection->add('cleansnapshots', $this->getRouterIdParameter().'/cleansnapshots');
     }
 }

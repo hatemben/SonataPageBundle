@@ -26,6 +26,48 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class SiteAdminController extends Controller
 {
+
+    /**
+     * @throws NotFoundHttpException
+     * @throws AccessDeniedException
+     *
+     * @return RedirectResponse|Response
+     */
+    public function cleansnapshotsAction()
+    {
+        $request = $this->getRequest();
+        if (false === $this->get('sonata.page.admin.snapshot')->isGranted('DELETE')) {
+            throw new AccessDeniedException();
+        }
+
+        $id = $request->get($this->admin->getIdParameter());
+
+        $object = $this->admin->getObject($id);
+
+        if (!$object) {
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+        }
+
+        $this->admin->setSubject($object);
+
+        if ('POST' === $request->getMethod()) {
+            $this->get('sonata.notification.backend')
+                ->createAndPublish('sonata.page.clean_snapshots', [
+                    'siteId' => $object->getId(),
+                    'mode' => 'async',
+                ]);
+
+            $this->addFlash('sonata_flash_success', $this->admin->trans('flash_snapshots_clean_success'));
+
+            return new RedirectResponse($this->admin->generateUrl('edit', ['id' => $object->getId()]));
+        }
+
+        return $this->render('@SonataPage/SiteAdmin/clean_snapshots.html.twig', [
+            'action' => 'snapshots',
+            'object' => $object,
+        ]);
+    }
+
     /**
      * @throws NotFoundHttpException
      * @throws AccessDeniedException

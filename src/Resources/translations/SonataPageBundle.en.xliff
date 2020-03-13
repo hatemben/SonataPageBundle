@@ -460,11 +460,11 @@
             </trans-unit>
             <trans-unit id="115" resname="link_create_snapshots">
                 <source>link_create_snapshots</source>
-                <target>Create snapshots</target>
+                <target>Create</target>
             </trans-unit>
             <trans-unit id="116" resname="title_create_snapshots">
                 <source>title_create_snapshots</source>
-                <target>Create snapshots</target>
+                <target>Create</target>
             </trans-unit>
             <trans-unit id="117" resname="message_create_snapshots">
                 <source>message_create_snapshots</source>
@@ -942,6 +942,22 @@
             <trans-unit id="show.label_type">
                 <source>show.label_type</source>
                 <target>Type</target>
+            </trans-unit>
+            <trans-unit id="link_clean_snapshots">
+                <source>link_clean_snapshots</source>
+                 <target>Clean</target>
+            </trans-unit>
+            <trans-unit id="message_clean_snapshots" resname="message_clean_snapshots">
+                <source>message_clean_snapshots</source>
+                <target>Click on the clean button to clean old snapshots for website : %site%</target>
+            </trans-unit>
+            <trans-unit id="button_clean_snapshot" resname="button_clean_snapshots">
+                <source>button_clean_snapshots</source>
+                <target>Clean Snapshots</target>
+            </trans-unit>
+            <trans-unit id="flash_snapshots_clean_success" resname="flash_snapshots_clean_success">
+                <source>flash_snapshots_clean_success</source>
+                <target>Snapshots were successfully cleaned.</target>
             </trans-unit>
         </body>
     </file>

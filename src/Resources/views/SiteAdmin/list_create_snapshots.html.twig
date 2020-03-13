@@ -12,5 +12,6 @@ file that was distributed with this source code.
 {% extends '@SonataAdmin/CRUD/base_list_field.html.twig' %}
 
 {% block field %}
-    <a href="{{ admin.generateObjectUrl('snapshots', object) }}">{{ "link_create_snapshots"|trans({}, "SonataPageBundle")}}</a>
+    <a class="btn btn-block btn-success btn-xs" href="{{ admin.generateObjectUrl('snapshots', object) }}">{{ "link_create_snapshots"|trans({}, "SonataPageBundle")}}</a>
+    <a class="btn btn-block btn-warning btn-xs" href="{{ admin.generateObjectUrl('cleansnapshots', object) }}">{{ "link_clean_snapshots"|trans({}, "SonataPageBundle")}}</a>
 {% endblock %}
